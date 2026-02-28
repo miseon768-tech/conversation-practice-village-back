@@ -1,7 +1,9 @@
 package domain.entity;
 
-import jakarta.persistence.Entity;
+import jakarta.persistence.*;
 import lombok.*;
+
+import java.time.LocalDateTime;
 
 @Setter
 @Getter
@@ -11,4 +13,25 @@ import lombok.*;
 @Entity
 
 public class Persona {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id")
+    private Member owner;
+
+    private String name;
+    private Integer age;
+    private String job;
+    private String mbti;
+    private String relationType;
+    private String personalityKeywords;
+    private String speakingStyle;
+
+    private Integer intimacyScore = 0;
+    private Integer trustScore = 0;
+
+    private LocalDateTime createdAt;
 }
