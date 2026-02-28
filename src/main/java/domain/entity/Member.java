@@ -25,11 +25,7 @@ public class Member {
     @Column(nullable = false)
     private String nickname;
 
-    private String profileImage;
-
-    private String loginProvider;
-
-    private String socialId;
+    private String password;
 
     private LocalDateTime createdAt;
 
