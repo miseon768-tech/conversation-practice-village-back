@@ -13,5 +13,5 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RequestMapping("/")
 @Validated
-public class MemberController {
+public class MessageController {
 }

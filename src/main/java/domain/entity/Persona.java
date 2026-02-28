@@ -10,5 +10,5 @@ import lombok.*;
 @Builder
 @Entity
 
-public class Follow {
+public class Persona {
 }
