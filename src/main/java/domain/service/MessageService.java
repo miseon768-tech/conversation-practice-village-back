@@ -6,7 +6,6 @@ import domain.dto.response.ChatResponse;
 import domain.entity.Conversation;
 import domain.entity.Message;
 import domain.entity.Persona;
-import domain.entity.SenderType;
 import domain.repository.ConversationRepository;
 import domain.repository.MessageRepository;
 import domain.repository.PersonaRepository;
@@ -24,7 +23,8 @@ public class MessageService {
     private final ConversationRepository conversationRepository;
     private final AiService aiService;
 
-    public ChatResponse chat(Long personaId, String userMessage) {
+    // 사용자 메시지 저장 -> AI 답변 생성 -> AI 메시지 저장 -> 답변 반환
+    public ChatResponse chat(Long personaId, String content) {
 
         Persona persona = personaRepository.findById(personaId)
                 .orElseThrow(() -> new RuntimeException("persona not found"));
@@ -38,27 +38,18 @@ public class MessageService {
                     return conversationRepository.save(newConv);
                 });
 
-        Message userMsg = Message.builder()
-                .conversation(conversation)
-                .senderType(SenderType.USER)
-                .content(userMessage)
-                .build();
-
+        Message userMsg = Message.userMessage(conversation, content);
         messageRepository.save(userMsg);
 
-        String aiReply = aiService.generateReply(persona, userMessage);
+        String aiReply = aiService.generateReply(persona, content);
 
-        Message aiMsg = Message.builder()
-                .conversation(conversation)
-                .senderType(SenderType.AI)
-                .content(aiReply)
-                .build();
-
+        Message aiMsg = Message.aiMessage(conversation, aiReply);
         messageRepository.save(aiMsg);
 
         return new ChatResponse(aiReply);
     }
 
+    // 특정 페르소나의 대화 내역 조회
     public List<MessageDto> getMessages(Long personaId) {
         return messageRepository
                 .findByConversation_Persona_IdOrderByCreatedAtAsc(personaId)

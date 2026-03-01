@@ -26,9 +26,9 @@ public class Persona {
     private Integer age;
     private String job;
     private String mbti;
-    private String relationType;
+    private String relationshipType;
     private String personalityKeywords;
-    private String speakingStyle;
+    private String speechStyle;
 
     private Integer intimacyScore = 0;
     private Integer trustScore = 0;
