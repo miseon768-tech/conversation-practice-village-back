@@ -14,22 +14,19 @@ import org.springframework.web.bind.annotation.*;
 @Validated
 public class FollowController {
 
-
     private final FollowService followService;
 
+    // 팔로우
     @PostMapping
-    public void follow(
-            @RequestParam Long followerId,
-            @RequestParam Long followingId
-    ) {
+    public void follow(@RequestParam Long followerId,
+                       @RequestParam Long followingId) {
         followService.follow(followerId, followingId);
     }
 
+    // 언팔로우
     @DeleteMapping
-    public void unfollow(
-            @RequestParam Long followerId,
-            @RequestParam Long followingId
-    ) {
+    public void unfollow(@RequestParam Long followerId,
+                         @RequestParam Long followingId) {
         followService.unfollow(followerId, followingId);
     }
 }

@@ -21,14 +21,14 @@ public class MessageController {
 
     private final MessageService messageService;
 
+    // 특정 페르소나에게 메시지를 보내고 ai 응답을 받음
     @PostMapping("/persona/{personaId}")
-    public ChatResponse sendMessage(
-            @PathVariable Long personaId,
-            @RequestBody ChatRequest request
-    ) {
+    public ChatResponse sendMessage(@PathVariable Long personaId,
+            @RequestBody ChatRequest request) {
         return messageService.chat(personaId, request.getMessage());
     }
 
+    // 특정 페르소나와 관련된 모든 메시지를 조회
     @GetMapping("/persona/{personaId}")
     public List<MessageDto> getMessages(@PathVariable Long personaId) {
         return messageService.getMessages(personaId);

@@ -19,26 +19,28 @@ public class PersonaController {
 
     private final PersonaService personaService;
 
+    // 페르소나 생성
     @PostMapping("/member/{memberId}")
-    public Persona create(
-            @PathVariable Long memberId,
-            @RequestBody Persona request
-    ) {
-        return personaService.create(memberId, request);
+    public Persona create(@PathVariable Long memberId,
+                          @RequestBody Persona persona) {
+        return personaService.create(memberId, persona);
     }
 
-    @GetMapping("/{id}")
-    public Persona get(@PathVariable Long id) {
-        return personaService.get(id);
+    // 페르소나 조회
+    @GetMapping("/{personaId}")
+    public Persona get(@PathVariable Long personaId) {
+        return personaService.get(personaId);
     }
 
+    // 회원의 모든 페르소나 조회
     @GetMapping("/member/{memberId}")
     public List<Persona> getByMember(@PathVariable Long memberId) {
         return personaService.getByMember(memberId);
     }
 
-    @DeleteMapping("/{id}")
-    public void delete(@PathVariable Long id) {
-        personaService.delete(id);
+    // 페르소나 삭제
+    @DeleteMapping("/{personaId}")
+    public void delete(@PathVariable Long personaId) {
+        personaService.delete(personaId);
     }
 }

@@ -18,24 +18,28 @@ import java.util.List;
 public class MemberController {
     private final MemberService memberService;
 
+    // 회원 가입
     @PostMapping
-    public Member create(@RequestBody Member request) {
-        return memberService.create(request);
+    public Member create(@RequestBody Member member) {
+        return memberService.create(member);
     }
 
-    @GetMapping("/{id}")
-    public Member get(@PathVariable Long id) {
-        return memberService.get(id);
+    // 회원 정보 수정
+    @GetMapping("/{memberId}")
+    public Member get(@PathVariable Long memberId) {
+        return memberService.get(memberId);
     }
 
+    // 전체 회원 조회
     @GetMapping
     public List<Member> getAll() {
         return memberService.getAll();
     }
 
-    @DeleteMapping("/{id}")
-    public void delete(@PathVariable Long id) {
-        memberService.delete(id);
+    // 회원 삭제
+    @DeleteMapping("/{memberId}")
+    public void delete(@PathVariable Long memberId) {
+        memberService.delete(memberId);
     }
 }
 

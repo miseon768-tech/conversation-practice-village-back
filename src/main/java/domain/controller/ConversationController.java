@@ -21,14 +21,14 @@ public class ConversationController {
 
     private final ConversationService conversationService;
 
+    // 특정 페르소나와 새로운 대화 세션을 시작하고 메시지를 전송
     @PostMapping("/{personaId}")
-    public ChatResponse chat(
-            @PathVariable Long personaId,
-            @RequestBody ChatRequest request
-    ) {
+    public ChatResponse chat(@PathVariable Long personaId,
+                             @RequestBody ChatRequest request) {
         return conversationService.chat(personaId, request.getMessage());
     }
 
+    // 특정 대화 내의 모든 메시지를 조회
     @GetMapping("/{conversationId}/messages")
     public List<MessageDto> getMessages(@PathVariable Long conversationId) {
         return conversationService.getMessages(conversationId);
