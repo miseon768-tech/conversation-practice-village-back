@@ -30,6 +30,10 @@ public class Message {
 
     private LocalDateTime createdAt;
 
+    @PrePersist
+    public void prePersist() {
+        this.createdAt = LocalDateTime.now();
+    }
 
     public static Message userMessage(Conversation conversation, String content) {
         return Message.builder()

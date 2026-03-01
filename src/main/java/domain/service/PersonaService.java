@@ -16,12 +16,12 @@ public class PersonaService {
     private final PersonaRepository personaRepository;
     private final MemberRepository memberRepository;
 
-    public Persona create(Long memberId, Persona request) {
+    public Persona create(Long memberId, Persona persona) {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new RuntimeException("member not found"));
 
-        request.setMember(member);
-        return personaRepository.save(request);
+        persona.setMember(member);
+        return personaRepository.save(persona);
     }
 
     public Persona get(Long id) {

@@ -20,7 +20,7 @@ public class Persona {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
-    private Member owner;
+    private Member member;
 
     private String name;
     private Integer age;
@@ -34,4 +34,9 @@ public class Persona {
     private Integer trustScore = 0;
 
     private LocalDateTime createdAt;
+
+    @PrePersist
+    public void prePersist() {
+        this.createdAt = LocalDateTime.now();
+    }
 }

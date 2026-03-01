@@ -23,4 +23,9 @@ public class Conversation {
     private Persona persona;
 
     private LocalDateTime createdAt;
+
+    @PrePersist
+    public void prePersist() {
+        this.createdAt = LocalDateTime.now();
+    }
 }

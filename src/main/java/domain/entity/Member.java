@@ -29,7 +29,12 @@ public class Member {
 
     private LocalDateTime createdAt;
 
-    @OneToMany(mappedBy = "owner")
+    @PrePersist
+    public void prePersist() {
+        this.createdAt = LocalDateTime.now();
+    }
+
+    @OneToMany(mappedBy = "member")
     private List<Persona> personas = new ArrayList<>();
 
     @OneToMany(mappedBy = "follower")

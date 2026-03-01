@@ -1,6 +1,7 @@
 package domain.service;
 
 import domain.AI.AiService;
+import domain.dto.MessageDto;
 import domain.dto.response.ChatResponse;
 import domain.entity.Conversation;
 import domain.entity.Message;
@@ -11,8 +12,10 @@ import domain.repository.MessageRepository;
 import domain.repository.PersonaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -60,5 +63,13 @@ public class ConversationService {
         messageRepository.save(aiMsg);
 
         return new ChatResponse(aiReply);
+    }
+
+    @Transactional(readOnly = true)
+    public List<MessageDto> getMessages(Long conversationId) {
+        return messageRepository.findByConversation_IdOrderByCreatedAtAsc(conversationId)
+                .stream()
+                .map(MessageDto::from)
+                .toList();
     }
 }
