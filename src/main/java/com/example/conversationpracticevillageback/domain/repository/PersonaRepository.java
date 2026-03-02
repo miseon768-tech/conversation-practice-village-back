@@ -9,4 +9,6 @@ import java.util.List;
 @Repository
 public interface PersonaRepository extends JpaRepository<Persona,Long> {
     List<Persona> findByMemberId(Long memberId);
+
+    boolean existsByNpcId(String npcId);
 }

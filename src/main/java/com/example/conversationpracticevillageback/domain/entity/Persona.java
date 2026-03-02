@@ -23,6 +23,9 @@ public class Persona {
     @JsonIgnore
     private Member member;
 
+    @Column(name = "npc_id", unique = true, nullable = false)
+    private String npcId;
+
     private String name;
     private Integer age;
     private String job;

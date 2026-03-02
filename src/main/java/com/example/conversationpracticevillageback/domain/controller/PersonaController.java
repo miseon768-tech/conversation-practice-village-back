@@ -1,8 +1,10 @@
 package com.example.conversationpracticevillageback.domain.controller;
 
+import com.example.conversationpracticevillageback.domain.dto.request.PersonaRequest;
 import com.example.conversationpracticevillageback.domain.entity.Persona;
 import com.example.conversationpracticevillageback.domain.service.PersonaService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,11 +21,12 @@ public class PersonaController {
 
     private final PersonaService personaService;
 
+
     // 페르소나 생성
-    @PostMapping("/member/{memberId}")
-    public Persona create(@PathVariable Long memberId,
-                          @RequestBody Persona persona) {
-        return personaService.create(memberId, persona);
+    @PostMapping
+    public ResponseEntity<Persona> create(@RequestBody PersonaRequest request) {
+        Persona created = personaService.create(request.getMemberId(), request.getNpcId(), request.toEntity());
+        return ResponseEntity.ok(created);
     }
 
     // 페르소나 조회

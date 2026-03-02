@@ -17,11 +17,18 @@ public class PersonaService {
     private final MemberRepository memberRepository;
 
     // 페르소나 생성
-    public Persona create(Long memberId, Persona persona) {
+    public Persona create(Long memberId, String npcId, Persona persona) {
+
+        if (personaRepository.existsByNpcId(npcId)) {
+            throw new RuntimeException("이미 인격이 부여된 캐릭터입니다.");
+        }
+
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new RuntimeException("member not found"));
 
         persona.setMember(member);
+        persona.setNpcId(npcId);
+
         return personaRepository.save(persona);
     }
 
