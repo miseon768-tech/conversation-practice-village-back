@@ -2,7 +2,7 @@ package com.example.conversationpracticevillageback.domain.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.time.LocalDateTime;
 
 @Setter
@@ -18,8 +18,9 @@ public class Persona {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "member_id")
+    @JsonIgnore
     private Member member;
 
     private String name;

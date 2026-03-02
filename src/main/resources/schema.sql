@@ -1,10 +1,5 @@
-drop table if exists message;
-drop table if exists conversation;
-drop table if exists persona;
-drop table if exists follow;
-drop table if exists member;
 
-create table member
+create table if not exists member
 (
     id            bigint auto_increment primary key,
     email         varchar(255) not null unique,
@@ -14,7 +9,7 @@ create table member
 );
 
 
-create table persona
+create table if not exists persona
 (
     id                   bigint auto_increment primary key,
     member_id            bigint       not null,
@@ -33,7 +28,7 @@ create table persona
 );
 
 
-create table conversation
+create table if not exists conversation
 (
     id         bigint auto_increment primary key,
     persona_id bigint not null,
@@ -42,7 +37,7 @@ create table conversation
     constraint fk_conversation_persona foreign key (persona_id) references persona (id) on delete cascade
 );
 
-create table message
+create table if not exists message
 (
     id              bigint auto_increment primary key,
     conversation_id bigint      not null,
@@ -54,7 +49,7 @@ create table message
 );
 
 
-create table follow
+create table if not exists follow
 (
     id           bigint auto_increment primary key,
     follower_id  bigint not null,
