@@ -19,10 +19,10 @@ public class ConversationController {
 
     private final ConversationService conversationService;
 
-    // 새로운 대화 세션 생성 (방 만들기)
+    // personaId로 기존 대화방을 찾거나, 없으면 새로 생성
     @PostMapping("/persona/{personaId}")
-    public Long chat(@PathVariable Long personaId) {
-        return conversationService.createConversation(personaId);
+    public Long getOrCreateConversation(@PathVariable Long personaId) {
+        return conversationService.getOrCreateConversation(personaId);
     }
 
     // 특정 페르소나와 나누었던 방 목록 조회

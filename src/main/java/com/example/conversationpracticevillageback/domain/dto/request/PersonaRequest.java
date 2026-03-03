@@ -1,6 +1,7 @@
 package com.example.conversationpracticevillageback.domain.dto.request;
 
 import com.example.conversationpracticevillageback.domain.entity.Persona;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -13,8 +14,11 @@ public class PersonaRequest {
     private Integer age;
     private String job;
     private String mbti;
+    @JsonProperty("relationship_type")
     private String relationshipType;
+    @JsonProperty("personality_keywords")
     private String personalityKeywords;
+    @JsonProperty("speech_style")
     private String speechStyle;
     private Integer intimacyScore = 0;
     private Integer trustScore = 0;
