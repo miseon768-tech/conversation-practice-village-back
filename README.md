@@ -325,17 +325,63 @@ config.setAllowedOrigins(List.of(
 #### ✅ Controller의 @CrossOrigin 어노테이션 확인
 각 컨트롤러에 `@CrossOrigin` 어노테이션이 있는지 확인
 
-### 2. Gemini API 에러
+### 2. Gemini API 에러 / AI 대화가 작동하지 않음 ⚠️
 
-**증상:** AI 응답이 돌아오지 않거나 500 에러 발생
+**증상:** 
+- AI 응답이 돌아오지 않음
+- "음... 갑자기 마을에 통신 장애가 생겼나 봐" 메시지 표시
+- 500 에러 발생
+- 로그에 "Gemini 호출 중 에러 발생" 메시지
+
+**원인:**
+- `GEMINI_API_KEY` 환경변수가 설정되지 않음
+- API 키가 만료되었거나 잘못됨
+- API 요청 한도 초과
 
 **해결 방법:**
-- Gemini API 키가 올바르게 설정되었는지 확인
-  ```bash
-  echo $GEMINI_API_KEY
-  ```
-- API 키 발급: [Google AI Studio](https://makersuite.google.com/app/apikey)
-- API 요청 한도 확인 (무료 티어: 분당 60회)
+
+1. **환경변수 확인**
+   ```bash
+   # 환경변수 설정 확인
+   echo $GEMINI_API_KEY
+   
+   # 없으면 설정
+   export GEMINI_API_KEY=your_actual_api_key
+   ```
+
+2. **API 키 발급/재발급**
+   - Google AI Studio에서 발급: https://aistudio.google.com/app/apikey
+   - 기존 키가 작동하지 않으면 새로 생성
+
+3. **서버 재시작 필수**
+   ```bash
+   # .env 파일 수정 후
+   source .env
+   ./run-dev.sh
+   
+   # 또는
+   ./gradlew bootRun
+   ```
+
+4. **API 요청 한도 확인**
+   - 무료 티어: 분당 60회, 일일 1,500회
+   - 한도 초과 시 잠시 대기 후 재시도
+
+5. **로그 확인**
+   ```bash
+   # 애플리케이션 로그에서 에러 확인
+   tail -f logs/spring.log
+   
+   # 또는 콘솔 출력 확인
+   ```
+
+**테스트 방법:**
+```bash
+# API 키로 직접 테스트
+curl -X POST "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"contents":[{"parts":[{"text":"Hello"}]}]}'
+```
 
 ### 3. 데이터베이스 연결 실패
 
