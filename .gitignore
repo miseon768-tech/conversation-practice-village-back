@@ -35,3 +35,16 @@ out/
 
 ### VS Code ###
 .vscode/
+
+### Docker & Deployment ###
+.env
+.env.local
+.env.production
+.env.*.local
+*.pem
+*.key
+
+### Application Properties ###
+application-local.properties
+application-secret.properties
+
