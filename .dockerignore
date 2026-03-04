@@ -1,48 +1,27 @@
-# .dockerignore for Backend (Spring Boot)
-
-# Build artifacts
+# Build artifacts - 빌드 결과물은 새로 만들 것이므로 제외
 build/
 target/
-*.jar
-*.war
+out/
 
-# Gradle
+# Gradle - 캐시는 제외하되, '빌드 도구(Wrapper)'는 반드시 포함해야 함
 .gradle/
-gradle/wrapper/gradle-wrapper.jar
+!gradle/wrapper/gradle-wrapper.jar
+!gradle/wrapper/gradle-wrapper.properties
+!gradlew
 
-# IDE
+# IDE & OS
 .idea/
 .vscode/
-*.iml
-*.iws
-*.ipr
-
-# OS
 .DS_Store
-Thumbs.db
+*.iml
 
-# Logs
-*.log
-logs/
-
-# Test
-test-results/
-
-# Git
+# Git & Docs
 .git/
-.gitignore
-.gitattributes
-
-# Documentation
 README.md
 *.md
 
-# CI/CD
-.github/
-.gitlab-ci.yml
-
-# Environment
+# Environment & Secrets (보안 필수!)
 .env
 .env.*
-!.env.example
-
+*.pem
+*.key
