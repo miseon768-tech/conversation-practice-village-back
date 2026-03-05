@@ -45,7 +45,11 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true); // 쿠키/인증 헤더 허용
-        config.setAllowedOrigins(List.of("http://localhost:3000", "http://13.125.244.156.nip.io:3000"));
+        config.setAllowedOrigins(List.of(
+                "http://localhost:3000",
+                "http://13.125.244.156:3000",
+                "http://13.125.244.156.nip.io:3000"
+        ));
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(List.of("*"));
         config.setExposedHeaders(List.of("Authorization")); // 프론트가 JWT 토큰을 읽을 수 있게 노출

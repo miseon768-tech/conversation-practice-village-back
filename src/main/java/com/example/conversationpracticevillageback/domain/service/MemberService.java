@@ -3,7 +3,9 @@ package com.example.conversationpracticevillageback.domain.service;
 import com.example.conversationpracticevillageback.domain.entity.Member;
 import com.example.conversationpracticevillageback.domain.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -20,13 +22,13 @@ public class MemberService {
 
     // 로그인
     public Member login(String email, String password) {
-        // 1. 이메일로 사용자 조회
-        Member member = memberRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("존재하지 않는 사용자입니다."));
+        final String authFailMessage = "이메일 또는 비밀번호가 일치하지 않습니다.";
 
-        // 2. 비밀번호 확인 (지금은 암호화 없이 생짜 비교, 나중에 BCrypt 적용)
+        Member member = memberRepository.findByEmail(email)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, authFailMessage));
+
         if (!member.getPassword().equals(password)) {
-            throw new RuntimeException("비밀번호가 일치하지 않습니다.");
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, authFailMessage);
         }
 
         return member;
