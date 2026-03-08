@@ -27,7 +27,8 @@ public class MemberService {
         Member member = memberRepository.findByEmail(email)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, authFailMessage));
 
-        if (!member.getPassword().equals(password)) {
+        // TODO: BCrypt 적용 전까지는 평문 비교
+        if (member.getPassword() == null || !member.getPassword().equals(password)) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, authFailMessage);
         }
 
