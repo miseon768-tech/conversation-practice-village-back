@@ -30,6 +30,11 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         // 명세서의 도메인들 허용
+                        .requestMatchers(
+                                "/v3/api-docs/**",
+                                "/swagger-ui/**",
+                                "/swagger-ui.html"
+                        ).permitAll()
                         .requestMatchers("/api/members/**").permitAll()
                         .requestMatchers("/api/personas/**").permitAll()
                         .requestMatchers("/api/messages/**").permitAll()
