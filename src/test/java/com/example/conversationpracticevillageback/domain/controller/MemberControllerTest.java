@@ -1,6 +1,6 @@
 package com.example.conversationpracticevillageback.domain.controller;
 
-import com.example.conversationpracticevillageback.domain.dto.request.LoginRequest;
+import com.example.conversationpracticevillageback.domain.request.LoginRequest;
 import com.example.conversationpracticevillageback.domain.entity.Member;
 import com.example.conversationpracticevillageback.domain.service.MemberService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -15,8 +15,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;

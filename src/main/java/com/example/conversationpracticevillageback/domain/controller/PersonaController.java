@@ -1,6 +1,6 @@
 package com.example.conversationpracticevillageback.domain.controller;
 
-import com.example.conversationpracticevillageback.domain.dto.request.PersonaRequest;
+import com.example.conversationpracticevillageback.domain.request.PersonaRequest;
 import com.example.conversationpracticevillageback.domain.entity.Persona;
 import com.example.conversationpracticevillageback.domain.service.PersonaService;
 import io.swagger.v3.oas.annotations.Operation;

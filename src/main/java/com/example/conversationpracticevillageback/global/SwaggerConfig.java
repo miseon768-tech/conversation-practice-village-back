@@ -1,4 +1,4 @@
-package com.example.conversationpracticevillageback.global.config;
+package com.example.conversationpracticevillageback.global;
 
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;

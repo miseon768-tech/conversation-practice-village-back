@@ -1,8 +1,8 @@
 package com.example.conversationpracticevillageback.domain.service;
 
 import com.example.conversationpracticevillageback.domain.AI.AiService;
-import com.example.conversationpracticevillageback.domain.dto.MessageDto;
-import com.example.conversationpracticevillageback.domain.dto.response.ChatResponse;
+import com.example.conversationpracticevillageback.domain.response.MessageDto;
+import com.example.conversationpracticevillageback.domain.response.ChatResponse;
 import com.example.conversationpracticevillageback.domain.entity.Conversation;
 import com.example.conversationpracticevillageback.domain.entity.Member;
 import com.example.conversationpracticevillageback.domain.entity.Message;

@@ -40,6 +40,8 @@ dependencies {
 	testImplementation 'org.mockito:mockito-core'
 	testImplementation 'org.mockito:mockito-junit-jupiter'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    // JWT 토큰 생성/검증
+    implementation 'com.auth0:java-jwt:4.4.0'
 }
 
 tasks.named('test') {

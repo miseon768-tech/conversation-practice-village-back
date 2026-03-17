@@ -33,6 +33,10 @@ public class Member {
     @Schema(description = "회원 비밀번호")
     private String password;
 
+    @Column(name = "refresh_token")
+    @Schema(description = "회원 리프레시 토큰")
+    private String refreshToken;
+
     @Schema(description = "가입 시간")
     private LocalDateTime createdAt;
 

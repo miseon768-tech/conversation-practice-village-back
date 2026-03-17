@@ -1,4 +1,4 @@
-package com.example.conversationpracticevillageback.domain.dto.response;
+package com.example.conversationpracticevillageback.domain.response;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;

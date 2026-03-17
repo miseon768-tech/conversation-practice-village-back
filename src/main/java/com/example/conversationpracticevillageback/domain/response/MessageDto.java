@@ -1,4 +1,4 @@
-package com.example.conversationpracticevillageback.domain.dto;
+package com.example.conversationpracticevillageback.domain.response;
 
 import com.example.conversationpracticevillageback.domain.entity.Message;
 import com.example.conversationpracticevillageback.domain.entity.SenderType;

@@ -1,4 +1,4 @@
-package com.example.conversationpracticevillageback.domain.dto.request;
+package com.example.conversationpracticevillageback.domain.request;
 
 import com.example.conversationpracticevillageback.domain.entity.Persona;
 import com.fasterxml.jackson.annotation.JsonProperty;

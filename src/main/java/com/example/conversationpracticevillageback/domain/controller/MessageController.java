@@ -1,8 +1,8 @@
 package com.example.conversationpracticevillageback.domain.controller;
 
-import com.example.conversationpracticevillageback.domain.dto.MessageDto;
-import com.example.conversationpracticevillageback.domain.dto.request.ChatRequest;
-import com.example.conversationpracticevillageback.domain.dto.response.ChatResponse;
+import com.example.conversationpracticevillageback.domain.response.MessageDto;
+import com.example.conversationpracticevillageback.domain.request.ChatRequest;
+import com.example.conversationpracticevillageback.domain.response.ChatResponse;
 import com.example.conversationpracticevillageback.domain.service.MessageService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
