@@ -41,6 +41,10 @@ public class JWTVerifyFilter extends OncePerRequestFilter {
                         // 인증 없이 허용 (복수형 members 경로 추가)
                         uri.equals("/api/members/login") ||
                         uri.equals("/api/members/signup") ||
+                        // persona, messages, conversations endpoints are public in SecurityConfig
+                        uri.startsWith("/api/personas") ||
+                        uri.startsWith("/api/messages") ||
+                        uri.startsWith("/api/conversations") ||
 
                         uri.equals("/api/members/email/code") ||
                         uri.equals("/api/members/social") ||
