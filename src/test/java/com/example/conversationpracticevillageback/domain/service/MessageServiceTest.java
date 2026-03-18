@@ -7,7 +7,8 @@ import com.example.conversationpracticevillageback.domain.entity.Conversation;
 import com.example.conversationpracticevillageback.domain.entity.Member;
 import com.example.conversationpracticevillageback.domain.entity.Message;
 import com.example.conversationpracticevillageback.domain.entity.Persona;
-import com.example.conversationpracticevillageback.domain.entity.SenderType;
+import com.example.conversationpracticevillageback.domain.entity.Message.SenderType;
+
 import com.example.conversationpracticevillageback.domain.repository.ConversationRepository;
 import com.example.conversationpracticevillageback.domain.repository.MessageRepository;
 import com.example.conversationpracticevillageback.domain.repository.PersonaRepository;

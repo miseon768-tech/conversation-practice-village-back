@@ -36,6 +36,10 @@ public class Message {
     @Schema(description = "메시지 생성 시간")
     private LocalDateTime createdAt;
 
+    public enum SenderType {
+        USER, AI
+    }
+
     @PrePersist
     public void prePersist() {
         this.createdAt = LocalDateTime.now();
