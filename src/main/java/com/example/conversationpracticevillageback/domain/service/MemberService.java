@@ -6,6 +6,7 @@ import com.example.conversationpracticevillageback.domain.entity.Member;
 import com.example.conversationpracticevillageback.domain.repository.MemberRepository;
 import com.example.conversationpracticevillageback.global.JwtUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -21,11 +22,13 @@ public class MemberService {
 
 
     // 회원 가입
+    @Transactional
     public Member create(Member member) {
         return memberRepository.save(member);
     }
 
     // 로그인
+    @Transactional
     public LoginResponse login(String email, String password) {
         final String authFailMessage = "이메일 또는 비밀번호가 일치하지 않습니다.";
 
@@ -47,6 +50,7 @@ public class MemberService {
     }
 
     // AccessToken 재발급
+    @Transactional
     public LoginResponse refreshAccessToken(String refreshToken) {
         DecodedJWT decoded;
         try {
@@ -73,17 +77,20 @@ public class MemberService {
     }
 
     // 회원 정보 조회
+    @Transactional(readOnly = true)
     public Member get(Long id) {
         return memberRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("member not found"));
     }
 
     // 모든 회원 조회
+    @Transactional(readOnly = true)
     public List<Member> getAll() {
         return memberRepository.findAll();
     }
 
     // 회원 삭제
+    @Transactional
     public void delete(Long id) {
         memberRepository.deleteById(id);
     }

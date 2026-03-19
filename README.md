@@ -1,6 +1,6 @@
 # Conversation Practice Village - Backend
 
-대화 연습 마을 프로젝트의 백엔드 API 서버입니다. Spring Boot 기반으로 구축되었으며, Google Gemini AI를 활용한 페르소나 기반 대화 시스템을 제공합니다.
+대화 연습 마을 프로젝트의 백엔드 API 서버입니다. Spring Boot (Java 21, Gradle) 기반으로 구축되었고, 인증(JWT, Refresh Token), WebSocket(STOMP), Redis(Session)와 Google Gemini AI 연동을 포함한 실서비스 운영을 목표로 개발되었습니다.
 
 ## 📋 목차
 - [기술 스택](#기술-스택)
@@ -14,14 +14,15 @@
 
 ## 🛠 기술 스택
 
-- **Framework**: Spring Boot 3.5.11
-- **Language**: Java 21
-- **Database**: MySQL 8.0+
-- **ORM**: Spring Data JPA (Hibernate)
-- **Security**: Spring Security (JWT 인증 준비)
-- **AI Integration**: Google Gemini 1.5 Flash API
-- **Build Tool**: Gradle 8.x
-- **기타**: Lombok, Validation
+- Framework: Spring Boot (Java 21)
+- Build Tool: Gradle (프로젝트 내 Gradle Wrapper 사용)
+- Database: MySQL 8+
+- ORM: Spring Data JPA (Hibernate)
+- Cache/Session: Redis (Spring Session)
+- Security: Spring Security, JWT (Access/Refresh token)
+- Realtime: Spring WebSocket (STOMP) + SockJS
+- AI Integration: Google Gemini (Generative Language API)
+- 기타: Lombok, Validation, Swagger(OpenAPI)
 
 ## ✨ 주요 기능
 
@@ -90,84 +91,77 @@ src/main/java/com/example/conversationpracticevillageback/
 ### 사전 요구사항
 
 - Java 21 이상
-- MySQL 8.0 이상
-- Gradle 8.x (프로젝트에 포함된 Gradle Wrapper 사용 가능)
-- Google Gemini API Key
+- MySQL 8+
+- Redis (세션 또는 캐시 용도)
+- Gradle Wrapper (프로젝트 포함)
 
-### 설치 및 실행
+### 빠른 실행 (개발)
 
-1. **레포지토리 클론**
-   ```bash
-   cd conversation-practice-village-back
-   ```
+1) 프로젝트 루트로 이동
+```bash
+cd conversation-practice-village-back
+```
 
-2. **데이터베이스 설정**
-   ```sql
-   -- MySQL에 데이터베이스 생성
-   CREATE DATABASE conversation_practice CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-   
-   -- 사용자 생성 및 권한 부여 (선택사항)
-   CREATE USER 'cpv_user'@'localhost' IDENTIFIED BY 'your_password';
-   GRANT ALL PRIVILEGES ON conversation_practice.* TO 'cpv_user'@'localhost';
-   FLUSH PRIVILEGES;
-   ```
+2) 환경 변수(예시)
+ - 로컬 개발용: `.env` 또는 셸에서 export
+```bash
+export SPRING_DATASOURCE_URL=jdbc:mysql://localhost:3306/conversation_practice
+export SPRING_DATASOURCE_USERNAME=root
+export SPRING_DATASOURCE_PASSWORD=your_password
+export JWT_SECRET=your_jwt_secret
+export REFRESH_TOKEN_SECRET=your_refresh_token_secret
+export GEMINI_API_KEY=your_gemini_key
+export REDIS_URL=redis://localhost:6379
+```
 
-3. **환경 변수 설정**
-   
-   `.env` 파일 생성 또는 시스템 환경 변수 설정:
-   ```bash
-   export GEMINI_API_KEY=your_google_gemini_api_key
-   export SPRING_DATASOURCE_URL=jdbc:mysql://localhost:3306/conversation_practice
-   export SPRING_DATASOURCE_USERNAME=cpv_user
-   export SPRING_DATASOURCE_PASSWORD=your_password
-   ```
+3) 빌드 및 실행
+```bash
+# Unix / macOS
+./gradlew clean build
+./gradlew bootRun
 
-4. **빌드 및 실행**
-   
-   **방법 1: Gradle Wrapper 사용 (권장)**
-   ```bash
-   # Unix/macOS
-   ./gradlew clean build
-   ./gradlew bootRun
-   
-   # Windows
-   gradlew.bat clean build
-   gradlew.bat bootRun
-   ```
-   
-   **방법 2: JAR 파일 실행**
-   ```bash
-   ./gradlew clean bootJar
-   java -jar build/libs/conversation-practice-village-back-0.0.1-SNAPSHOT.jar
-   ```
+# 또는 jar 실행
+./gradlew bootJar
+java -jar build/libs/conversation-practice-village-back-0.0.1-SNAPSHOT.jar
+```
 
-5. **서버 확인**
-   
-   서버가 정상적으로 시작되면 `http://localhost:8080`에서 접근 가능합니다.
+서버가 실행되면 기본 포트는 `8080`입니다.
+
+### 프로덕션 배포(요약)
+- EC2에 JAR를 배포하거나 Docker 이미지를 만들어 컨테이너로 배포할 수 있습니다.
+- Docker를 쓰려면 프로젝트 루트에 `Dockerfile`이 필요합니다(현재 프로젝트에 Dockerfile이 포함되어 있을 수 있음). 배포 시 포트, 환경변수, 로그 및 시스템d/컨테이너 오케스트레이션을 설정하세요.
+
+예: Docker 이미지 빌드/실행
+```bash
+# 프로젝트 루트에서
+docker build -t cpv-back:latest .
+docker run -d --name cpv-back -p 8080:8080 \
+  -e SPRING_DATASOURCE_URL='jdbc:mysql://db:3306/conversation_practice' \
+  -e SPRING_DATASOURCE_USERNAME=root \
+  -e SPRING_DATASOURCE_PASSWORD=pass \
+  -e GEMINI_API_KEY=your_key \
+  cpv-back:latest
+```
 
 ## ⚙️ 환경 설정
 
-### application.properties
+### application.properties (참고)
+
+환경변수로 치환하여 사용합니다. 예시 키:
 
 ```properties
-# Application Name
-spring.application.name=conversation-practice-village-back
-
-# Database Configuration
+# Database
 spring.datasource.url=${SPRING_DATASOURCE_URL}
 spring.datasource.username=${SPRING_DATASOURCE_USERNAME}
 spring.datasource.password=${SPRING_DATASOURCE_PASSWORD}
-spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
 
-# JPA/Hibernate Configuration
+# JPA
 spring.jpa.show-sql=true
 spring.jpa.hibernate.ddl-auto=update
-spring.jpa.database-platform=org.hibernate.dialect.MySQLDialect
-spring.jpa.properties.hibernate.format_sql=true
 
-# Google Gemini API
+# AI (예시)
 google.gemini.api-key=${GEMINI_API_KEY}
-google.gemini.url=https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent
+# endpoint는 SDK/버전에 따라 다르므로 로그(404 메시지)를 참고하여 맞춰주세요.
 ```
 
 ### CORS 설정
@@ -278,113 +272,50 @@ Conversation (대화방)
 
 Message (메시지)
 ├── id (PK)
-├── conversation_id (FK → Conversation)
-├── sender_type (USER | AI)
-├── content
-└── created_at
+## 🔧 운영/개발 중 자주 발생하는 문제와 체크리스트
 
-Follow (팔로우)
-├── id (PK)
-├── follower_id (FK → Member)
-├── following_id (FK → Member)
-└── created_at
-```
+1) 401 Unauthorized (토큰 문제)
+ - 브라우저에서 요청 시 쿠키(Access/Refresh)를 제대로 보내는지 확인하세요. 프론트에서 fetch 시 credentials: 'include'가 필요합니다.
+ - 서버 로그에서 "토큰이 없거나 형식이 틀립니다." 메시지가 보이면 Authorization 헤더 또는 쿠키가 누락된 것입니다.
 
-스키마 파일: `src/main/resources/schema.sql`
+2) 404 / Gemini 모델 관련 오류
+ - Google API 버전(v1/v1beta)에 따라 모델 사용 가능 여부가 달라집니다. 로그의 404 메시지를 보고 endpoint 형식을 확인하세요.
+ - 일시적으로 모델 호출이 실패하면 예외를 던져 트랜잭션을 rollback 하도록 처리하세요. (현재 AiService에서 예외 로깅/재던짐 여부 확인 권장)
 
-## 🔧 문제 해결
+3) 데이터가 DB에 빈값으로 들어가는 문제
+ - AI 호출 실패 시 RuntimeException으로 예외를 던져 @Transactional 메서드가 rollback되도록 하세요. 단순 로깅 후 무시하면 DB에 불완전한 레코드가 남을 수 있습니다.
 
-### 1. CORS 에러 발생
+4) CORS / WebSocket 연결 문제
+ - `SecurityConfig`의 allowedOrigins와 WebSocket AllowedOrigins가 일치해야 합니다.
+ - 배포 도메인(퍼블릭 IP / nip.io 등)을 정확히 설정하세요.
 
-**증상:**
-```
-Access to fetch at 'http://localhost:8080/api/messages/persona/1' from origin 'http://localhost:3000' 
-has been blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present
-```
+### 디버깅 팁
+- 로그 레벨을 DEBUG로 올리고 예외 스택 트레이스를 함께 출력하도록 `AiService`의 catch 문을 수정하세요.
+- 로컬에서 curl로 API를 직접 호출해 응답 확인 (토큰/헤더 포함).
 
-**해결 방법:**
+## Architecture (간단 요약)
 
-#### ✅ 백엔드 서버가 실행 중인지 확인
-```bash
-# 8080 포트 사용 확인
-lsof -i :8080
+컴포넌트:
+- Frontend (Next.js) — HTTP / WebSocket 연결, 클라이언트 쿠키에 Refresh Token 저장(권장: HttpOnly cookie), Access Token은 메모리/쿠키로 사용
+- Backend (Spring Boot) — REST API, JWT 인증(Access/Refresh), WebSocket(STOMP), AI 연동(AiService), DB(MySQL), Cache/Session(Redis)
+- External — Google Gemini API
 
-# 서버 재시작
-./gradlew bootRun
-```
+주요 시퀀스(요약):
+1. 사용자 로그인 → Backend에서 인증 후 Access/Refresh 토큰 발급(Refresh는 HttpOnly 쿠키로 설정)
+2. 클라이언트는 Access Token을 Authorization 헤더로 전송하거나, Cookie 기반 인증을 사용할 때는 credentials: 'include'로 요청
+3. 대화 생성/메시지 전송 시 Backend는 Conversation/Message를 저장하고 AiService를 비동기 또는 동기 호출하여 AI 응답 생성
+4. AI 호출 실패 시 트랜잭션을 적절히 rollback하도록 처리하고, 실패 메시지를 사용자에게 전달
 
-#### ✅ SecurityConfig의 CORS 설정 확인
-`SecurityConfig.java`에서 프론트엔드 Origin이 허용되어 있는지 확인:
-```java
-config.setAllowedOrigins(List.of(
-    "http://localhost:3000",  // 로컬 개발
-    "http://13.125.244.156.nip.io:3000"  // 배포 환경
-));
-```
+네트워크 포트 요약:
+- Frontend 개발: 3000
+- Backend 개발: 8080
+- WebSocket: /ws (8080에서 서빙)
+- DB: MySQL 3306
+- Redis: 6379
 
-#### ✅ Controller의 @CrossOrigin 어노테이션 확인
-각 컨트롤러에 `@CrossOrigin` 어노테이션이 있는지 확인
+---
 
-### 2. Gemini API 에러 / AI 대화가 작동하지 않음 ⚠️
-
-**증상:** 
-- AI 응답이 돌아오지 않음
-- "음... 갑자기 마을에 통신 장애가 생겼나 봐" 메시지 표시
-- 500 에러 발생
-- 로그에 "Gemini 호출 중 에러 발생" 메시지
-
-**원인:**
-- `GEMINI_API_KEY` 환경변수가 설정되지 않음
-- API 키가 만료되었거나 잘못됨
-- API 요청 한도 초과
-
-**해결 방법:**
-
-1. **환경변수 확인**
-   ```bash
-   # 환경변수 설정 확인
-   echo $GEMINI_API_KEY
-   
-   # 없으면 설정
-   export GEMINI_API_KEY=your_actual_api_key
-   ```
-
-2. **API 키 발급/재발급**
-   - Google AI Studio에서 발급: https://aistudio.google.com/app/apikey
-   - 기존 키가 작동하지 않으면 새로 생성
-
-3. **서버 재시작 필수**
-   ```bash
-   # .env 파일 수정 후
-   source .env
-   ./run-dev.sh
-   
-   # 또는
-   ./gradlew bootRun
-   ```
-
-4. **API 요청 한도 확인**
-   - 무료 티어: 분당 60회, 일일 1,500회
-   - 한도 초과 시 잠시 대기 후 재시도
-
-5. **로그 확인**
-   ```bash
-   # 애플리케이션 로그에서 에러 확인
-   tail -f logs/spring.log
-   
-   # 또는 콘솔 출력 확인
-   ```
-
-**테스트 방법:**
-```bash
-# API 키로 직접 테스트
-curl -X POST "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=YOUR_API_KEY" \
-  -H "Content-Type: application/json" \
-  -d '{"contents":[{"parts":[{"text":"Hello"}]}]}'
-```
-
-### 3. 데이터베이스 연결 실패
-
+더 구체적인 배포/디버깅 스텝이나 `AiService` 코드 수정(예외 로깅/재던짐) 등 원하시면 해당 파일을 열어 직접 수정해 드리겠습니다.
 **증상:** `Cannot create PoolableConnectionFactory`
 
 **해결 방법:**

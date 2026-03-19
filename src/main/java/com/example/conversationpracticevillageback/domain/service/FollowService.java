@@ -5,6 +5,7 @@ import com.example.conversationpracticevillageback.domain.entity.Member;
 import com.example.conversationpracticevillageback.domain.repository.FollowRepository;
 import com.example.conversationpracticevillageback.domain.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -14,6 +15,7 @@ public class FollowService {
     private final FollowRepository followRepository;
     private final MemberRepository memberRepository;
 
+    @Transactional
     public void follow(Long followerId, Long followingId) {
 
         Member follower = memberRepository.findById(followerId)
@@ -29,6 +31,7 @@ public class FollowService {
         followRepository.save(follow);
     }
 
+    @Transactional
     public void unfollow(Long followerId, Long followingId) {
         followRepository.deleteByFollowerIdAndFollowingId(followerId, followingId);
     }
