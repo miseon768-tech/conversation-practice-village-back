@@ -8,8 +8,16 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.RestClient;
+import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.reactive.function.client.WebClientResponseException;
+import org.springframework.web.reactive.function.client.WebClientRequestException;
+import org.springframework.web.reactive.function.client.WebClientResponseException.BadRequest;
+import org.springframework.web.reactive.function.client.WebClientResponseException.NotFound;
+import org.springframework.web.reactive.function.client.WebClientResponseException.InternalServerError;
+import org.springframework.web.reactive.function.client.WebClientResponseException.ServiceUnavailable;
+import org.springframework.web.reactive.function.client.WebClientResponseException.Unauthorized;
+import org.springframework.web.reactive.function.client.WebClientResponseException.Forbidden;
+import org.springframework.web.reactive.function.client.WebClientResponseException;
 
 import java.util.Arrays;
 import java.util.List;
