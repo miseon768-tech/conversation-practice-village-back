@@ -33,7 +33,7 @@ public class MessageDto {
         return MessageDto.builder()
                 .id(message.getId())
                 .content(message.getContent())
-                .senderType(message.getSenderType())
+                .senderType(SenderType.valueOf(message.getSenderType().name()))
                 .createdAt(message.getCreatedAt())
                 .build();
     }

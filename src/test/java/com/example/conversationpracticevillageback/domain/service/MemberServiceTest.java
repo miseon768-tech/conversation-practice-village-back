@@ -9,6 +9,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import com.example.conversationpracticevillageback.domain.response.LoginResponse;
+import com.example.conversationpracticevillageback.global.JwtUtil;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
@@ -26,6 +28,9 @@ class MemberServiceTest {
 
     @Mock
     private MemberRepository memberRepository;
+
+    @Mock
+    private JwtUtil jwtUtil;
 
     @InjectMocks
     private MemberService memberService;
@@ -64,13 +69,17 @@ class MemberServiceTest {
     void testLogin_Success() {
         // Given
         when(memberRepository.findByEmail("test@example.com")).thenReturn(Optional.of(testMember));
+        when(jwtUtil.createAccessToken(1L)).thenReturn("access-token-xyz");
+        when(jwtUtil.createRefreshToken(1L)).thenReturn("refresh-token-abc");
 
         // When
-        Member result = memberService.login("test@example.com", "password123");
+        LoginResponse result = memberService.login("test@example.com", "password123");
 
         // Then
         assertNotNull(result);
-        assertEquals("test@example.com", result.getEmail());
+        assertEquals(testMember.getId(), result.getId());
+        assertEquals(testMember.getNickname(), result.getNickname());
+        assertEquals("access-token-xyz", result.getAccessToken());
         verify(memberRepository, times(1)).findByEmail("test@example.com");
     }
 

@@ -6,11 +6,13 @@ import io.swagger.v3.oas.models.info.Contact;
 import io.swagger.v3.oas.models.servers.Server;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 
 @Configuration
 public class SwaggerConfig {
 
     @Bean
+    @ConditionalOnMissingBean(OpenAPI.class)
     public OpenAPI openAPI() {
         return new OpenAPI()
                 .info(new Info()

@@ -1,7 +1,7 @@
 package com.example.conversationpracticevillageback.domain.response;
 
 import com.example.conversationpracticevillageback.domain.entity.Message;
-import com.example.conversationpracticevillageback.domain.entity.Message.SenderType;
+import com.example.conversationpracticevillageback.domain.entity.SenderType;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

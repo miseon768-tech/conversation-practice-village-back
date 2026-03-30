@@ -36,6 +36,7 @@ class MemberControllerTest {
     private ObjectMapper objectMapper;
 
     private Member testMember;
+    private com.example.conversationpracticevillageback.domain.response.LoginResponse loginResponse;
 
     @BeforeEach
     void setUp() {
@@ -46,6 +47,7 @@ class MemberControllerTest {
                 .password("password123")
                 .createdAt(LocalDateTime.now())
                 .build();
+        loginResponse = new com.example.conversationpracticevillageback.domain.response.LoginResponse("access", "refresh", testMember.getId(), testMember.getNickname());
     }
 
     @Test
@@ -68,7 +70,7 @@ class MemberControllerTest {
         loginRequest.setEmail("test@example.com");
         loginRequest.setPassword("password123");
 
-        when(memberService.login("test@example.com", "password123")).thenReturn(testMember);
+        when(memberService.login("test@example.com", "password123")).thenReturn(loginResponse);
 
         mockMvc.perform(post("/api/members/login")
                         .contentType(MediaType.APPLICATION_JSON)

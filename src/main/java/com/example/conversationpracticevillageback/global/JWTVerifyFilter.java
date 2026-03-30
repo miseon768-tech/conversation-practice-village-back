@@ -9,6 +9,8 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -25,6 +27,7 @@ public class JWTVerifyFilter extends OncePerRequestFilter {
 
     private final MemberRepository memberRepository;
     private final JwtUtil jwtUtil;
+    private static final Logger logger = LoggerFactory.getLogger(JWTVerifyFilter.class);
 
     // JWT 필터 제외 경로 설정
     @Override
@@ -68,20 +71,40 @@ public class JWTVerifyFilter extends OncePerRequestFilter {
                                     FilterChain filterChain) throws ServletException, IOException {
 
         String authHeader = request.getHeader("Authorization");
+        String token = null;
 
-        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+        // 1) Authorization 헤더 우선
+        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+            token = authHeader.substring(7);
+            logger.debug("JWTVerifyFilter: Authorization 헤더에서 토큰 획득");
+        } else {
+            // 2) 헤더가 없으면 쿠키에서 accessToken 검사
+            if (request.getCookies() != null) {
+                for (jakarta.servlet.http.Cookie cookie : request.getCookies()) {
+                    if ("accessToken".equals(cookie.getName())) {
+                        token = cookie.getValue();
+                        logger.debug("JWTVerifyFilter: Cookie에서 accessToken 획득");
+                        break;
+                    }
+                }
+            } else {
+                logger.debug("JWTVerifyFilter: 요청에 쿠키 없음");
+            }
+        }
+
+        if (token == null || token.isBlank()) {
+            logger.warn("JWTVerifyFilter: 토큰 없음/형식 오류 - URI=" + request.getRequestURI());
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             response.setContentType("application/json; charset=UTF-8");
             response.getWriter().write("{\"message\":\"토큰이 없거나 형식이 틀립니다.\"}");
             return;
         }
 
-        String token = authHeader.substring(7);
         DecodedJWT jwt;
-
         try {
             jwt = jwtUtil.verifyToken(token);
         } catch (JWTVerificationException e) {
+            logger.warn("JWTVerifyFilter: 토큰 검증 실패 - " + e.getMessage() + " URI=" + request.getRequestURI());
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             response.setContentType("application/json; charset=UTF-8");
             response.getWriter().write("{\"message\":\"사용자 토큰이 일치하지 않습니다.\"}");
@@ -89,19 +112,18 @@ public class JWTVerifyFilter extends OncePerRequestFilter {
         }
 
         String memberId = jwt.getSubject();
-
         Member member;
         try {
             member = memberRepository.findById(Long.valueOf(memberId))
                     .orElseThrow(() -> new NoSuchElementException("사용자 정보가 없습니다."));
         } catch (NoSuchElementException e) {
+            logger.warn("JWTVerifyFilter: 사용자 조회 실패 - id=" + memberId);
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             response.setContentType("application/json; charset=UTF-8");
             response.getWriter().write("{\"message\":\"사용자 정보가 없습니다.\"}");
             return;
         }
 
-        // ★ 여기서 SecurityContext에 인증 정보 심기 ★
         UsernamePasswordAuthenticationToken authentication =
                 new UsernamePasswordAuthenticationToken(
                         member,
@@ -109,8 +131,6 @@ public class JWTVerifyFilter extends OncePerRequestFilter {
                         List.of(new SimpleGrantedAuthority("ROLE_USER"))
                 );
         SecurityContextHolder.getContext().setAuthentication(authentication);
-
-        // 컨트롤러에서 @RequestAttribute로 member 사용 가능
         request.setAttribute("member", member);
 
         filterChain.doFilter(request, response);

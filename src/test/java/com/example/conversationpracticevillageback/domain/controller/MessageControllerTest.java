@@ -3,7 +3,7 @@ package com.example.conversationpracticevillageback.domain.controller;
 import com.example.conversationpracticevillageback.domain.response.MessageDto;
 import com.example.conversationpracticevillageback.domain.request.ChatRequest;
 import com.example.conversationpracticevillageback.domain.response.ChatResponse;
-import com.example.conversationpracticevillageback.domain.entity.Message.SenderType;
+import com.example.conversationpracticevillageback.domain.entity.SenderType;
 
 import com.example.conversationpracticevillageback.domain.service.MessageService;
 import com.fasterxml.jackson.databind.ObjectMapper;
