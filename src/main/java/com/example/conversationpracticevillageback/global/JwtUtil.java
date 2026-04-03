@@ -13,12 +13,12 @@ public class JwtUtil {
     private static final String SECRET = "villageKey";
     private static final String ISSUER = "villageIssuer";
 
-    // Access Token 생성 (30분)
+    // Access Token 생성 (60분)
     public String createAccessToken(Long memberId) {
         return JWT.create()
                 .withSubject(memberId.toString())
                 .withIssuer(ISSUER)
-                .withExpiresAt(new Date(System.currentTimeMillis() + 1000 * 60 * 30))
+                .withExpiresAt(new Date(System.currentTimeMillis() + 1000 * 60 * 60))
                 .sign(Algorithm.HMAC256(SECRET));
     }
 
